@@ -188,10 +188,12 @@ main > *,
 }
 
 /* The home page's timeline is as wide as all three columns, centred on its
- * line; the header and footer share its left edge. */
+ * line; the header and footer centre on the same line. */
 .home .masthead > *,
 .home .colophon > * {
   grid-column: 1 / -1;
+  justify-self: center;
+  text-align: center;
 }
 
 .home .runhead-name {
@@ -704,7 +706,7 @@ a.thumb:hover {
   border-left: 1px solid var(--hairline);
 }
 
-/* ── Colophon ──────────────────────────────────────────────────────────── */
+/* ── Footer ────────────────────────────────────────────────────────────── */
 
 .colophon {
   margin-top: clamp(4rem, 8vw, 6rem);
@@ -715,10 +717,6 @@ a.thumb:hover {
 }
 
 .colophon > p {
-  margin: 0.6rem 0 0;
-}
-
-.colophon .kicker {
   margin: 0;
 }
 
@@ -907,7 +905,14 @@ a.thumb:hover {
     column-gap: 0;
   }
 
-    /* The columns stack under their year. The centre line goes; each group
+  /* With no centre line, the header and footer go back to the left edge. */
+  .home .masthead > *,
+  .home .colophon > * {
+    justify-self: start;
+    text-align: left;
+  }
+
+  /* The columns stack under their year. The centre line goes; each group
    * keeps a rail down its left edge instead. */
   .tl {
     --pad: 1.75rem;

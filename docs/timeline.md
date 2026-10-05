@@ -148,7 +148,7 @@ When all the copy is final, remove every draft flag and set `PAPER_PUBLISH=produ
 1. **Load and validate.** [`content.js`](../paper/content.js) reads `timeline.json` and every Markdown file, checks each field, and collects all errors before throwing.
 2. **Render.** [`templates.js`](../paper/templates.js) builds each page as a template string. [`timeview.js`](../paper/timeview.js) groups entries into year rows and columns. [`markdown.js`](../paper/markdown.js) turns Markdown into HTML through unified, remark and rehype; [`figures.js`](../paper/figures.js) draws pipeline figures.
 3. **Write.** Pages go to `.paper/` at the repo root (`.paper-dev/` for the dev server, so a build never disturbs a running one). Both are gitignored and wiped on every run, so a deleted page cannot linger. A `404.html` is written alongside.
-4. **Bundle.** The pages are registered as Vite HTML entries, so Vite fingerprints the CSS, script and logos. In the bundle step the plugin moves each page from `.paper/` to the site root, fills in the page weight shown in the footer, and writes `feed.xml`, `sitemap.xml` and `robots.txt` (not in preview), `_redirects`, and `config/content/paper.json` (the index the terminal's `about` and `notes` commands read).
+4. **Bundle.** The pages are registered as Vite HTML entries, so Vite fingerprints the CSS, script and logos. In the bundle step the plugin moves each page from `.paper/` to the site root and writes `feed.xml`, `sitemap.xml` and `robots.txt` (not in preview), `_redirects`, and `config/content/paper.json` (the index the terminal's `about` and `notes` commands read).
 
 In dev, a middleware maps `/` and `/<slug>/` onto the files in `.paper-dev/` and regenerates them when anything in `content/` or `paper/` changes.
 
