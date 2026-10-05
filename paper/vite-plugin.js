@@ -23,7 +23,6 @@ import { join, relative, dirname } from "node:path";
 // Dev and build write to different folders, so a build never disturbs the
 // pages a running dev server is serving.
 const outName = (dev) => (dev ? ".paper-dev" : ".paper");
-import { gzipSync } from "node:zlib";
 import { loadContent, listDrafts } from "./content.js";
 import {
   aboutPage,
@@ -32,7 +31,6 @@ import {
   projectPage,
   feedXml,
   sitemapXml,
-  WEIGHT_TOKEN,
   SITE_URL,
 } from "./templates.js";
 
@@ -91,8 +89,7 @@ export function generate({
   }
   for (const [file, html] of pages) {
     mkdirSync(dirname(file), { recursive: true });
-    // The page weight is only known after bundling; dev shows a dash.
-    writeFileSync(file, dev ? html.replace(WEIGHT_TOKEN, "—") : html);
+    writeFileSync(file, html);
   }
   return { files: pages.map(([f]) => f), notes, projects: content.projects, site: ctx.site };
 }
@@ -187,21 +184,13 @@ export default function paperPlugin() {
         emit("robots.txt", `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
       }
 
-      // Fill in each page's real weight: gzipped HTML + the CSS/JS it loads.
+      // Move each page from .paper/ up to the site root.
       for (const [key, asset] of Object.entries(bundle)) {
         const OUT = outName(false);
         if (!key.startsWith(`${OUT}/`) || !key.endsWith(".html")) continue;
-        // Move the page from .paper/ up to the site root.
         delete bundle[key];
         asset.fileName = key.slice(OUT.length + 1);
         bundle[asset.fileName] = asset;
-        const html = String(asset.source);
-        let bytes = gzipSync(html).length;
-        for (const [, ref] of html.matchAll(/(?:href|src)="\/(assets\/[^"]+\.(?:css|js))"/g)) {
-          const dep = bundle[ref];
-          if (dep) bytes += gzipSync(dep.type === "chunk" ? dep.code : String(dep.source)).length;
-        }
-        asset.source = html.replace(WEIGHT_TOKEN, `${Math.max(1, Math.round(bytes / 1024))} KB`);
       }
     },
   };

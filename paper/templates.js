@@ -13,9 +13,6 @@ import { posix } from "node:path";
 export const SITE_URL = "https://rvs23.dev";
 const REPO_URL = "https://github.com/rvs-23/rv-portfolio-matrix/blob/main";
 
-/** Swapped for the real gzip weight in generateBundle (build only). */
-export const WEIGHT_TOKEN = "__PAPER_PAGE_WEIGHT__";
-
 const esc = (s) =>
   String(s)
     .replace(/&/g, "&amp;")
@@ -224,9 +221,8 @@ ${rows.join("\n")}
 }
 
 function colophon(ctx) {
-  return `      <footer class="colophon" id="colophon" data-title="Colophon">
-        <p class="kicker">Colophon</p>
-        <p>Set in Archivo, Instrument Serif and JetBrains Mono. Written in Markdown, built without a framework, no tracking. This page weighs <span class="weight">${WEIGHT_TOKEN}</span> before fonts. Updated ${formatDay(ctx.buildDate)}.</p>
+  return `      <footer class="colophon" id="colophon">
+        <p>Updated ${formatDay(ctx.buildDate)}.</p>
       </footer>`;
 }
 
